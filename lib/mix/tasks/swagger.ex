@@ -36,8 +36,15 @@ defmodule Mix.Tasks.Swagger do
   @doc """
   Mix entrypoint method
   """
+
   @spec run([any]) :: no_return
   def run(args) do
+    Mix.Task.run "compile", args
+    generate_docs(args)
+  end
+
+ defp generate_docs(args) do
+    Mix.Task.run "compile", args
     try do
       Mix.shell.info "Generating Swagger documentation..."
 
@@ -260,9 +267,9 @@ defmodule Mix.Tasks.Swagger do
       :boolean -> %{"type" => "boolean"}
       :string -> %{"type" => "string"}
       :binary -> %{"type" => "string", "format" => "binary"}
-      :Ecto.DateTime -> %{"type" => "string", "format" => "date-time"}
-      :Ecto.Date -> %{"type" => "string", "format" => "date"}
-      :Ecto.Time -> %{"type" => "string", "format" => "date-time"}
+      Ecto.DateTime -> %{"type" => "string", "format" => "date-time"}
+      Ecto.Date -> %{"type" => "string", "format" => "date"}
+      Ecto.Time -> %{"type" => "string", "format" => "date-time"}
       :uuid -> %{"type" => "string"}
       _ -> %{"type" => "string"}
     end
